@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        .form {
+            display: grid;
+            margin: auto;
+            width: 30%;
+            gap: 20px;
+        }
+
+        .form input {
+            place-content: center;
+            border: 2px solid black;
+        }
+
+        .output {
+            border: 2px solid black;
+            margin: auto;
+            height: auto;
+            width: 70%;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Registration Form</h1>
+    <div class="form">
+        Adding into the database
+        <input type="text" class="firstName" name="user" placeholder="first name">
+        <input type="text" class="lastName" name="support" placeholder="last name">
+        <input type="tel" class="mobile" name="mobile" placeholder="mobile no.">
+        <input type="email" class="email" name="email" placeholder="email">
+        <button class="btn1">Add user</button>
+    </div><br>
+
+    <div class="form">
+        finding the match
+        <input type="text" name="finder">
+        <button class="btn3">Find Match</button>
+    </div>
+    <br>
+    <div class="form">
+        Listing the data
+        <button class="btn2">List Data</button>
+    </div><br>
+
+    <div class="output">
+
+    </div>
+
+</body>
+<script>
+    const input1 = document.querySelector('input[name="user"]');
+    const input2 = document.querySelector('input[name="support"]');
+    const input3 = document.querySelector('input[name="mobile"]');
+    const input4 = document.querySelector('input[name="email"]');
+    const input5 = document.querySelector('input[name="finder"]');
+    const btn = document.querySelector('.btn1');
+    const btn2 = document.querySelector('.btn2');
+    const btn3 = document.querySelector('.btn3');
+    const output = document.querySelector('.output');
+    const endPoint = '/users';
+
+    const createOutput = (data) => {
+        // output.innerHTML = `<div>Users</div>`;
+        data.forEach(element => {
+            // output.innerHTML += ` (${element.user} ${element.support})`;
+            const main = document.createElement('div');
+            const myInput = document.createElement('input');
+            const supportInput = document.createElement('input');
+            const emailInput = document.createElement('input');
+            const span1 = document.createElement('span');
+            const br = document.createElement('br');
+
+
+            // for first input
+            myInput.setAttribute('type', 'text');
+            myInput.value = element.user;
+
+
+            // for second input
+            supportInput.setAttribute('type', 'text');
+            supportInput.value = element.support;
+
+            // for the third input
+            emailInput.setAttribute('type', 'text');
+            emailInput.value = element.email;
+
+
+            // id of the particular data
+            span1.textContent = element._id;
+
+
+
+            // delete and update(put) button
+            const button1 = document.createElement('button');
+            button1.textContent = `Delete`;
+            button1.style.color = 'red';
+            button1.addEventListener('click', () => {
+                console.log(`DELETE `);
+                fetch(endPoint, {
+                    method: 'delete',
+                    body: JSON.stringify(element),
+                    headers: {
+                        'Content-Type': "application/json",
+                    }
+                }).then(res => res.json()).then(data => {
+                    if (data.status) {
+                        main.remove()
+                    }
+                })
+            })
+
+
+
+            const button2 = document.createElement('button');
+            button2.textContent = `Update`;
+            button2.style.color = 'Blue';
+            button2.addEventListener('click', () => {
+                element.user = myInput.value;
+                element.support = supportInput.value;
+                element.email = emailInput.value;
+                console.log(element);
+                fetch(endPoint, {
+                    method: 'put',
+                    body: JSON.stringify(element),
+                    headers: {
+                        'Content-Type': "application/json",
+                    }
+                }).then(res => res.json()).then(data => {
+                    console.log(data);
+                })
+            })
+
+            main.append(myInput);
+            main.append(supportInput);
+            main.append(emailInput);
+            main.append(span1);
+            main.append(button1);
+            main.append(button2);
+            main.append(br);
+            output.append(main);
+
+
+            // for breaking the line
+
+            br;
+            output.append(br);
+        });
+    }
+
+
+
+    // finding in the database and having the different endpoint
+    btn3.addEventListener('click', () => {
+        console.log(`${input5.value}`);
+        fetch('/user/' + input5.value).then(res => res.json()).then(data => {
+            console.log(data);
+            createOutput(data);
+        })
+    })
+
+    // get data into the web application
+    btn2.addEventListener("click", () => {
+        console.log('clicked');
+        fetch(endPoint).then(res => res.json()).then(data => {
+            console.log(data);
+            createOutput(data);
+        })
+    })
+
+    // post method
+
+    btn.addEventListener('click', () => {
+        alert('registerd')
+        const data = {
+            user: input1.value,
+            support: input2.value,
+            mobile: input3.value,
+            email: input4.value
+        }
+        console.log(data);
+        fetch(endPoint, {
+            method: 'post',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': "application/json",
+            }
+        }).then((res) => res.json()).then(data => {
+            console.log(data);
+        })
+
+
+
+
+    })
+</script>
+
+</html>
