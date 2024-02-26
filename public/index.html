@@ -88,7 +88,6 @@
             myInput.setAttribute('type', 'text');
             myInput.value = element.user;
 
-
             // for second input
             supportInput.setAttribute('type', 'text');
             supportInput.value = element.support;
@@ -100,8 +99,6 @@
 
             // id of the particular data
             span1.textContent = element._id;
-
-
 
             // delete and update(put) button
             const button1 = document.createElement('button');
@@ -121,8 +118,6 @@
                     }
                 })
             })
-
-
 
             const button2 = document.createElement('button');
             button2.textContent = `Update`;
@@ -152,15 +147,12 @@
             main.append(br);
             output.append(main);
 
-
             // for breaking the line
 
             br;
             output.append(br);
         });
     }
-
-
 
     // finding in the database and having the different endpoint
     btn3.addEventListener('click', () => {
@@ -181,7 +173,6 @@
     })
 
     // post method
-
     btn.addEventListener('click', () => {
         alert('registerd')
         const data = {
@@ -200,9 +191,6 @@
         }).then((res) => res.json()).then(data => {
             console.log(data);
         })
-
-
-
 
     })
 </script>

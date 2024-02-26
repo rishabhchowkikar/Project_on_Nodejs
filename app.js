@@ -3,8 +3,8 @@ const app = express();
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
 const router = express.Router();
+const cors = require("cors");
 const port = process.env.PORT || 5000;
-
 const url = require("./secret");
 const json = require("body-parser");
 const { CommandStartedEvent, ObjectId } = require("mongodb");
@@ -17,6 +17,14 @@ const client = new MongoClient(url, {
 client.connect().then(() => {
   const myDatabase = client.db("registration").collection("user");
   console.log("connected successfully");
+
+  app.use(
+    cors({
+      origin: ["https://deploy-mern-api.vercel.app"],
+      methods: ["POST", "GET"],
+      credentials: true,
+    })
+  );
 
   // for finding the match of element with the database using the different routes
   // setting the route outside of the main route
@@ -65,10 +73,7 @@ client.connect().then(() => {
               email: req.body.email,
             },
           },
-          // {
-          //   // there is one problem email is not updating
-          //   $set: { email: req.body.email },
-          // },
+
           {
             upsert: false,
           }
